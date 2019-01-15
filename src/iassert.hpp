@@ -15,6 +15,8 @@
 #pragma once
 
 void I_internal(const char *file, int line, const char *condition, const char *message);
+void I_segfault_setup();
+
 
 #define I_0()                     I_2_shared(true,"")
 #define I_1(A)                    I_2_shared(A,"")

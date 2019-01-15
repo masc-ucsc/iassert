@@ -14,6 +14,10 @@ This is a C/C++ library to improve over the default assert in C/C++. The main ad
 
 * Allows for messages in asserts, I(cond,"bad bad case") or GI(true,false,"Not again")
 
+* Intercepts segfaults and prints call trace
+
+* Segfault can be intercepted with GDB too.
+
 
 Example usage:
 
@@ -34,6 +38,23 @@ int main() {
   GI(true,true);
 
   printf("Hello %d\n",j);
+}
+```
+
+To support segfault call I_segfault_setup:
+
+```cpp
+#include <stdio.h>
+
+#include "iassert.hpp"
+
+int main() {
+
+  I_segfault_setup();
+
+  int bad[10];
+  bad[100000] = 0; // Trigger segfault
+
 }
 ```
 
