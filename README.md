@@ -2,7 +2,7 @@
 A better invariant assertion library with gdb support
 
 
-This is a C/C++ library to improve over the default assert in C/C++. The main advantages:
+This is a C++ library to improve over the default assert in C++. The main advantages:
 
 * Guarded assert support. GI(cond1,cond2) The cond2 triggers a failure only if cond1 is true.
 
