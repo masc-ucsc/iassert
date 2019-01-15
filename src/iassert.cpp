@@ -16,7 +16,7 @@ void I_internal(const char *file, int line, const char *condition, const char *m
     if (I_GDB[0] == '1') {
       char contents[10] = {0,};
       int fd = open("/proc/sys/kernel/yama/ptrace_scope", O_RDONLY);
-      bool ptrace_works = true;
+      int ptrace_works = 1;
       if (fd>=0) {
         int len = read(fd,contents,1);
         if (len == 1 && contents[0] == '1') {
@@ -24,7 +24,7 @@ void I_internal(const char *file, int line, const char *condition, const char *m
           fprintf(stderr,"echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope\n");
           fprintf(stderr,"to persist: sudo vim /etc/sysctl.d/10-ptrace.conf\n");
           fprintf(stderr,"   and set: kernel.yama.ptrace_scope = 0\n");
-          ptrace_works = false;
+          ptrace_works = 0;
         }
         close(fd);
       }
