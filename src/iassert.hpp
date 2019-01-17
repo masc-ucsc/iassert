@@ -15,7 +15,7 @@
 #pragma once
 
 void I_internal(const char *file, int line, const char *condition, const char *message);
-void I_segfault_setup();
+void I_setup();
 void I_gdb_continuation();
 
 

@@ -140,7 +140,7 @@ void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext) {
     exit(EXIT_FAILURE);
 }
 
-void I_segfault_setup() {
+void I_setup() {
 
   static int called = 0;
   if (called)

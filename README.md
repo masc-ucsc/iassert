@@ -41,7 +41,7 @@ int main() {
 }
 ```
 
-To support segfault call I_segfault_setup:
+To support segfault call I_setup:
 
 ```cpp
 #include <stdio.h>
@@ -50,11 +50,19 @@ To support segfault call I_segfault_setup:
 
 int main() {
 
-  I_segfault_setup();
+  I_setup();
 
   int bad[10];
   bad[100000] = 0; // Trigger segfault
 
 }
+```
+
+To breakpoint with gdb. Write a failing assertion anywhere. Connect with gdb,
+set a breakpoint in I_gdb_continuation, now the assertion will continue inside gdb.
+
+```bash
+>b I_gdb_continuation
+>c
 ```
 
