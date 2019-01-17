@@ -51,7 +51,6 @@ void I_gdb_continuation();
 #else
 
 #define I_2_shared(condition, message) \
-    do{ (condition)? (void)(0)  \
-        : I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); }while(0)
+    do{ if(!condition) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } }while(0)
 #endif
 
