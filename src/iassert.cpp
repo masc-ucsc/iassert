@@ -12,10 +12,19 @@
 
 #include <iostream>
 
-static void try_gdb() {
+void I_gdb_continuation() {
+  // Nothing to do here, just to allow a breakpoint for easier debug. Call:
+  //
+  // b I_gdb_continuation
+  // c
+  //
+  // If you have a failing assertion
+}
+
+static bool try_gdb() {
   const char *I_GDB = getenv("I_GDB");
   if (I_GDB==0)
-    return;
+    return false;
 
   if (I_GDB[0] == '1') {
     char contents[10] = {0,};
@@ -36,12 +45,20 @@ static void try_gdb() {
     if (ptrace_works) {
       for(int i=0;i<500;i++) { // At most 500 seconds waiting for gdb
         fprintf(stderr,"waiting for gdb, use: gdb -p %d\n", (int)getpid());
+        auto start_time = std::chrono::system_clock::now();
         sleep(i/4+1);
+        auto end_time   = std::chrono::system_clock::now();
+        std::chrono::duration<double> t = end_time - start_time;
+        if (t>(i/4+1+0.5)) { // 0.5 second off, inside GDB for sure
+          return true;
+        }
       }
     }
   }else if (I_GDB[0] != '0') {
     fprintf(stderr,"ERROR: unexpected I_GDB value. Either 1 or 0\n");
   }
+
+  return false;
 }
 
 void I_internal(const char *file, int line, const char *condition, const char *message) {
@@ -49,9 +66,10 @@ void I_internal(const char *file, int line, const char *condition, const char *m
   if (message)
     fprintf(stderr,"%s\n",message);
 
-  try_gdb();
+  bool in_gdb = try_gdb();
 
-  abort();
+  if (!in_gdb)
+    abort();
 }
 
 typedef struct _sig_ucontext {
@@ -116,8 +134,9 @@ void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext) {
 
   free(messages);
 
-  try_gdb();
-  exit(EXIT_FAILURE);
+  bool in_gdb = try_gdb();
+  if (!in_gdb)
+    exit(EXIT_FAILURE);
 }
 
 void I_segfault_setup() {

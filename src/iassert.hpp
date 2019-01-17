@@ -16,6 +16,7 @@
 
 void I_internal(const char *file, int line, const char *condition, const char *message);
 void I_segfault_setup();
+void I_gdb_continuation();
 
 
 #define I_0()                     I_2_shared(true,"")
@@ -51,6 +52,6 @@ void I_segfault_setup();
 
 #define I_2_shared(condition, message) \
     do{ (condition)? (void)(0)  \
-        : I_internal(__FILE__ , __LINE__ , #condition, message); }while(0)
+        : I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); }while(0)
 #endif
 
