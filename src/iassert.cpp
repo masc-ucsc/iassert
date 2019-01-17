@@ -10,6 +10,7 @@
 #include <execinfo.h>
 #include <cxxabi.h>
 
+#include <chrono>
 #include <iostream>
 
 void I_gdb_continuation() {
