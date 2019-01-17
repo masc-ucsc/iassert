@@ -50,7 +50,7 @@ static bool try_gdb() {
         sleep(i/4+1);
         auto end_time   = std::chrono::system_clock::now();
         std::chrono::duration<double> t = end_time - start_time;
-        if (t>(i/4+1+0.5)) { // 0.5 second off, inside GDB for sure
+        if (t.count()>(i/4+1+0.5)) { // 0.5 second off, inside GDB for sure
           return true;
         }
       }
