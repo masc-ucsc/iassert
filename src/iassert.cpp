@@ -8,7 +8,6 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
-#include <execinfo.h>
 #include <cxxabi.h>
 #include <ctype.h>
 #include <limits.h>
@@ -99,15 +98,20 @@ void I_internal(const char *file, int line, const char *condition, const char *m
     abort();
 }
 
+#ifdef __GLIBC__
+#include <execinfo.h>
 typedef struct _sig_ucontext {
- unsigned long     uc_flags;
- struct ucontext   *uc_link;
- stack_t           uc_stack;
- struct sigcontext uc_mcontext;
- sigset_t          uc_sigmask;
+  unsigned long     uc_flags;
+  struct ucontext   *uc_link;
+  stack_t           uc_stack;
+  struct sigcontext uc_mcontext;
+  sigset_t          uc_sigmask;
 } sig_ucontext_t;
+#endif
 
 void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext) {
+
+#ifdef __GLIBC__
   sig_ucontext_t * uc = (sig_ucontext_t *)ucontext;
 
   void * caller_address = (void *) uc->uc_mcontext.rip; // x86 specific
@@ -160,6 +164,7 @@ void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext) {
   }
 
   free(messages);
+#endif
 
   bool in_gdb = try_gdb();
   if (!in_gdb)
