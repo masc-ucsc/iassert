@@ -66,3 +66,13 @@ set a breakpoint in I_gdb_continuation, now the assertion will continue inside g
 >c
 ```
 
+If you want to avoid typing this every time, you can set it in the ~/.gdbinit
+
+```bash
+# $(HOME)/.gdbinit setup for iassert
+set breakpoint pending on
+break I_gdb_continuation
+set breakpoint pending auto
+```
+
+

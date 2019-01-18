@@ -23,7 +23,9 @@ int main() {
   I(i==0);
   I(j==2,"this fails");
   GI(true,true, "jeje");
+  printf("foo %d\n",j);
   GI(true,true);
+  I(j==7,"this fails gail");
 
   printf("Hello %d\n",j);
 }

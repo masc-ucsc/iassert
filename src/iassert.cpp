@@ -1,3 +1,4 @@
+//  This file is distributed under the BSD 3-Clause License. See LICENSE for details.
 
 #include <stdio.h>
 #include <unistd.h>
@@ -9,8 +10,9 @@
 #include <signal.h>
 #include <execinfo.h>
 #include <cxxabi.h>
+#include <ctype.h>
+#include <limits.h>
 
-#include <chrono>
 #include <iostream>
 
 void I_gdb_continuation() {
@@ -20,6 +22,34 @@ void I_gdb_continuation() {
   // c
   //
   // If you have a failing assertion
+}
+
+
+static bool is_gdb_attached() {
+
+  char buf[PATH_MAX];
+
+  const int status_fd = ::open("/proc/self/status", O_RDONLY);
+  if (status_fd == -1)
+    return false;
+
+  const ssize_t num_read = ::read(status_fd, buf, sizeof(buf) - 1);
+  if (num_read <= 0)
+    return false;
+
+  buf[num_read] = '\0';
+  constexpr char tracerPidString[] = "TracerPid:";
+  const auto tracer_pid_ptr = ::strstr(buf, tracerPidString);
+  if (!tracer_pid_ptr)
+    return false;
+
+  for (const char* characterPtr = tracer_pid_ptr + sizeof(tracerPidString) - 1; characterPtr <= buf + num_read; ++characterPtr) {
+    if (::isspace(*characterPtr))
+      continue;
+    return ::isdigit(*characterPtr) != 0 && *characterPtr != '0';
+  }
+
+  return false;
 }
 
 static bool try_gdb() {
@@ -46,13 +76,9 @@ static bool try_gdb() {
     if (ptrace_works) {
       for(int i=0;i<500;i++) { // At most 500 seconds waiting for gdb
         fprintf(stderr,"waiting for gdb, use: gdb -p %d\n", (int)getpid());
-        auto start_time = std::chrono::system_clock::now();
         sleep(i/4+1);
-        auto end_time   = std::chrono::system_clock::now();
-        std::chrono::duration<double> t = end_time - start_time;
-        if (t.count()>(i/4+1+0.5)) { // 0.5 second off, inside GDB for sure
+        if (is_gdb_attached())
           return true;
-        }
       }
     }
   }else if (I_GDB[0] != '0') {
