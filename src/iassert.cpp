@@ -88,6 +88,7 @@ static bool try_gdb() {
 }
 
 void I_internal(const char *file, int line, const char *condition, const char *message) {
+  fflush(stdout);
   fprintf(stderr,"%s:%d :assertion %s failed\n", file, line, condition);
   if (message)
     fprintf(stderr,"%s\n",message);
