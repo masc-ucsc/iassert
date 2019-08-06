@@ -19,9 +19,6 @@ void I_internal(const char *file, int line, const char *condition, const char *m
 void I_setup();
 void I_gdb_continuation();
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-compare"
-
 #define I_0()                     I_2_shared(true,"")
 #define I_1(A)                    I_2_shared(A,"")
 #define I_2(A,B)                  I_2_shared(A,B)
@@ -34,19 +31,25 @@ void I_gdb_continuation();
 
 #define IX_X(x,A,B,C,FUNC, ...)  FUNC
 
-#define I(...)                    IX_X(,##__VA_ARGS__,\
-                                      I_3(__VA_ARGS__),\
-                                      I_2(__VA_ARGS__),\
-                                      I_1(__VA_ARGS__),\
-                                      I_0(__VA_ARGS__)\
-                                      )
+#define I(...) \
+  do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
+    IX_X(,##__VA_ARGS__,\
+        I_3(__VA_ARGS__),\
+        I_2(__VA_ARGS__),\
+        I_1(__VA_ARGS__),\
+        I_0(__VA_ARGS__)\
+        ); \
+    _Pragma("GCC diagnostic pop"); }while(0)
 
-#define GI(...)                   IX_X(,##__VA_ARGS__,\
-                                      GI_3(__VA_ARGS__),\
-                                      GI_2(__VA_ARGS__),\
-                                      GI_1(__VA_ARGS__),\
-                                      GI_0(__VA_ARGS__)\
-                                      )
+#define GI(...) \
+  do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
+    IX_X(,##__VA_ARGS__,\
+        GI_3(__VA_ARGS__),\
+        GI_2(__VA_ARGS__),\
+        GI_1(__VA_ARGS__),\
+        GI_0(__VA_ARGS__)\
+        ); \
+    _Pragma("GCC diagnostic pop"); }while(0)
 
 #ifdef NDEBUG
 // Keep the (void) to avoid warnings when in release the variable is not used
@@ -54,8 +57,6 @@ void I_gdb_continuation();
 #else
 
 #define I_2_shared(condition, message) \
-    do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } _Pragma("GCC diagnostic pop"); }while(0)
+  do{ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } }while(0)
 #endif
-
-#pragma GCC diagnostic pop
 
