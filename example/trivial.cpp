@@ -12,9 +12,6 @@ int main() {
   int i=0;
   int j = 1;
 
-  static int pointer[3];
-  //pointer[1001230] = 0;
-  //
   std::string s1 = "potato";
   std::string s2 = "bar";
 
@@ -26,6 +23,10 @@ int main() {
   printf("foo %d\n",j);
   GI(true,true);
   I(j==7,"this fails gail");
+
+  int a_signed = 1;
+  unsigned int a_unsigned = 1;
+  I(a_signed == a_unsigned); // No warning
 
   printf("Hello %d\n",j);
 }

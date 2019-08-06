@@ -54,7 +54,7 @@ void I_gdb_continuation();
 #else
 
 #define I_2_shared(condition, message) \
-    do{ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } }while(0)
+    do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } _Pragma("GCC diagnostic pop"); }while(0)
 #endif
 
 #pragma GCC diagnostic pop
