@@ -27,6 +27,7 @@ int main() {
   int a_signed = 1;
   unsigned int a_unsigned = 1;
   I(a_signed == a_unsigned); // No warning
+  I(a_signed < s1.size());   // No warning
 
   printf("Hello %d\n",j);
 }
