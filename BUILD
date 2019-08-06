@@ -2,9 +2,9 @@
 
 cc_library(
    name = "iassert",
-   srcs = ["iassert.cpp"],
-   hdrs = ["iassert.hpp"],
-   #includes = [ "." ], # Needed because some includes use <foo.h>
+   srcs = ["src/iassert.cpp"],
+   hdrs = ["src/iassert.hpp"],
+   includes = [ "src" ], # Needed because some includes use <foo.h>
    visibility = ["//visibility:public"],
 )
 
