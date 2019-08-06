@@ -19,6 +19,8 @@ void I_internal(const char *file, int line, const char *condition, const char *m
 void I_setup();
 void I_gdb_continuation();
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
 
 #define I_0()                     I_2_shared(true,"")
 #define I_1(A)                    I_2_shared(A,"")
@@ -54,4 +56,6 @@ void I_gdb_continuation();
 #define I_2_shared(condition, message) \
     do{ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } }while(0)
 #endif
+
+#pragma GCC diagnostic pop
 
