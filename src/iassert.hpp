@@ -32,24 +32,24 @@ void I_gdb_continuation();
 #define IX_X(x,A,B,C,FUNC, ...)  FUNC
 
 #define I(...) \
-  do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
+  do{ /* LCOV_EXCL_START */  _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
     IX_X(,##__VA_ARGS__,\
         I_3(__VA_ARGS__),\
         I_2(__VA_ARGS__),\
         I_1(__VA_ARGS__),\
         I_0(__VA_ARGS__)\
         ); \
-    _Pragma("GCC diagnostic pop"); }while(0)
+    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */ }while(0)
 
 #define GI(...) \
-  do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
+  do{ /* LCOV_EXCL_START */ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
     IX_X(,##__VA_ARGS__,\
         GI_3(__VA_ARGS__),\
         GI_2(__VA_ARGS__),\
         GI_1(__VA_ARGS__),\
         GI_0(__VA_ARGS__)\
         ); \
-    _Pragma("GCC diagnostic pop"); }while(0)
+    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */ }while(0)
 
 #ifdef NDEBUG
 // Keep the (void) to avoid warnings when in release the variable is not used
@@ -57,6 +57,6 @@ void I_gdb_continuation();
 #else
 
 #define I_2_shared(condition, message) \
-  do{ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } }while(0)
+  do{ /* LCOV_EXCL_START */ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } /* LCOV_EXCL_STOP */ }while(0)
 #endif
 
