@@ -53,9 +53,14 @@ void I_gdb_continuation();
 
 #ifdef NDEBUG
 // Keep the (void) to avoid warnings when in release the variable is not used
-#define do{ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wunused-variable\""); \
-            I_2_shared(condition, message); \
-            _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */ }while(0)
+#define I_2_shared(condition, message)                                         \
+  do {                                                                         \
+    _Pragma("GCC diagnostic push");                                            \
+    _Pragma("GCC diagnostic ignored \"-Wunused-variable\"");                   \
+    if (false) {                                                               \
+      (void)(condition);                                                       \
+    }
+    _Pragma("GCC diagnostic pop"); }while(0)
 #else
 
 #define I_2_shared(condition, message) \
