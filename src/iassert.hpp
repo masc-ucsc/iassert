@@ -59,7 +59,7 @@ void I_gdb_continuation();
     _Pragma("GCC diagnostic ignored \"-Wunused-variable\"");                   \
     if (false) {                                                               \
       (void)(condition);                                                       \
-    }
+    }                                                                          \
     _Pragma("GCC diagnostic pop"); }while(0)
 #else
 
