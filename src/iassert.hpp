@@ -53,7 +53,7 @@ void I_gdb_continuation();
 
 #ifdef NDEBUG
 // Keep the (void) to avoid warnings when in release the variable is not used
-#define I_2_shared(condition, message) (void)(condition)
+#define I_2_shared(condition, message)
 #else
 
 #define I_2_shared(condition, message) \

@@ -29,5 +29,8 @@ int main() {
   I(a_signed == a_unsigned); // No warning
   I(a_signed < s1.size());   // No warning
 
+  int a = 3;
+  I(a==3); // unused warning
+
   printf("Hello %d\n",j);
 }
