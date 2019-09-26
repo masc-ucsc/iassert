@@ -26,8 +26,8 @@ void I_gdb_continuation();
 
 #define GI_0()                    I_2_shared(false,"invalid GI with no arguments")
 #define GI_1(A)                   I_2_shared(false,"invalid GI with one argument")
-#define GI_2(A,B)                 do{ if (A) I_2_shared(B,""); }while(0)
-#define GI_3(A,B,C)               do{ if (A) I_2_shared(B,C);  }while(0)
+#define GI_2(A,B)                 do{ if (__builtin_expect((A),0)) I_2_shared(B,""); }while(0)
+#define GI_3(A,B,C)               do{ if (__builtin_expect((A),0)) I_2_shared(B,C);  }while(0)
 
 #define IX_X(x,A,B,C,FUNC, ...)  FUNC
 
