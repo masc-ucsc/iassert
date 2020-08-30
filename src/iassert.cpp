@@ -115,7 +115,7 @@ void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext) {
 #ifdef __GLIBC__
   sig_ucontext_t * uc = (sig_ucontext_t *)ucontext;
 
-  void * caller_address = (void *) uc->uc_mcontext.rip; // x86 specific
+  void * caller_address = (void *) uc->uc_mcontext.pc; // x86 specific
 
   fprintf(stderr,"signal %d (%s) address is 0x%p called from 0x%p\n", sig_num, strsignal(sig_num), info->si_addr, caller_address);
 
