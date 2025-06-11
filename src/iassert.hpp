@@ -53,8 +53,7 @@ void I_gdb_continuation();
     _Pragma("GCC diagnostic ignored \"-Wsign-compare\"");                      \
     IX_X(, ##__VA_ARGS__, I_3(__VA_ARGS__), I_2(__VA_ARGS__),                  \
          I_1(__VA_ARGS__), I_0(__VA_ARGS__));                                  \
-  #endif
-_Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */
+    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */
 }
 while (0)
 
