@@ -51,16 +51,17 @@ void I_gdb_continuation();
   do { /* LCOV_EXCL_START */                                                   \
     _Pragma("GCC diagnostic push");                                            \
     _Pragma("GCC diagnostic ignored \"-Wsign-compare\"");                      \
+    _Pragma("GCC diagnostic ignored \"-Wassume\"");                            \
     IX_X(, ##__VA_ARGS__, I_3(__VA_ARGS__), I_2(__VA_ARGS__),                  \
          I_1(__VA_ARGS__), I_0(__VA_ARGS__));                                  \
-    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */
-}
-while (0)
+    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */                        \
+  } while (0)
 
 #define GI(...)                                                                \
   do { /* LCOV_EXCL_START */                                                   \
     _Pragma("GCC diagnostic push");                                            \
     _Pragma("GCC diagnostic ignored \"-Wsign-compare\"");                      \
+    _Pragma("GCC diagnostic ignored \"-Wassume\"");                            \
     IX_X(, ##__VA_ARGS__, GI_3(__VA_ARGS__), GI_2(__VA_ARGS__),                \
          GI_1(__VA_ARGS__), GI_0(__VA_ARGS__));                                \
     _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */                        \
