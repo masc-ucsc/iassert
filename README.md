@@ -18,6 +18,24 @@ This is a C++ library to improve over the default assert in C++. The main advant
 
 * Segfault can be intercepted with GDB too.
 
+Bazel ready:
+```
+bazel build -c dbg //...
+```
+
+To import in your project:
+```
+bazel_dep(name = "iassert", version = "0.1.0")
+
+archive_override(
+    module_name = "iassert",
+    integrity = "sha256-lHlDknD8QsWKOVnXql7NIH6/C76SEOHRe0JlMPCwlrI=",
+    strip_prefix = "iassert-c2136ed8809ec1addbc48eb836c58d5b895e3f2b",
+    urls = [
+        "https://github.com/masc-ucsc/iassert/archive/c2136ed8809ec1addbc48eb836c58d5b895e3f2b.zip",
+    ],
+)
+```
 
 Example usage:
 

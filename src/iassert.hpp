@@ -1,4 +1,5 @@
-//  This file is distributed under the BSD 3-Clause License. See LICENSE for details.
+//  This file is distributed under the BSD 3-Clause License. See LICENSE for
+//  details.
 
 // Better way to handle assertions:
 //
@@ -15,41 +16,56 @@
 
 #pragma once
 
-void I_internal(const char *file, int line, const char *condition, const char *message);
+void I_internal(const char *file, int line, const char *condition,
+                const char *message);
 void I_setup();
 void I_gdb_continuation();
 
-#define I_0()                     I_2_shared(true,"")
-#define I_1(A)                    I_2_shared(A,"")
-#define I_2(A,B)                  I_2_shared(A,B)
-#define I_3(A,B,C)                I_2_shared(false,"invalid I with 3 arguments")
+#define I_0() I_2_shared(true, "")
+#define I_1(A) I_2_shared(A, "")
+#define I_2(A, B) I_2_shared(A, B)
+#define I_3(A, B, C) I_2_shared(false, "invalid I with 3 arguments")
 
-#define GI_0()                    I_2_shared(false,"invalid GI with no arguments")
-#define GI_1(A)                   I_2_shared(false,"invalid GI with one argument")
-#define GI_2(A,B)                 do{ if (__builtin_expect(((A)!=0),0)) I_2_shared(B,""); }while(0)
-#define GI_3(A,B,C)               do{ if (__builtin_expect(((A)!=0),0)) I_2_shared(B,C);  }while(0)
+#define GI_0() I_2_shared(false, "invalid GI with no arguments")
+#define GI_1(A) I_2_shared(false, "invalid GI with one argument")
+#define GI_2(A, B)                                                             \
+  do {                                                                         \
+    if (__builtin_expect(((A) != 0), 0))                                       \
+      I_2_shared(B, "");                                                       \
+  } while (0)
+#define GI_3(A, B, C)                                                          \
+  do {                                                                         \
+    if (__builtin_expect(((A) != 0), 0))                                       \
+      I_2_shared(B, C);                                                        \
+  } while (0)
 
-#define IX_X(x,A,B,C,FUNC, ...)  FUNC
+#define IX_X(x, A, B, C, FUNC, ...) FUNC
 
-#define I(...) \
-  do{ /* LCOV_EXCL_START */  _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
-    IX_X(,##__VA_ARGS__,\
-        I_3(__VA_ARGS__),\
-        I_2(__VA_ARGS__),\
-        I_1(__VA_ARGS__),\
-        I_0(__VA_ARGS__)\
-        ); \
-    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */ }while(0)
+#if __cplusplus >= 202302L
+#define I_ASSUME(cond) [[assume(cond)]]
+#else
+#define I_ASSUME(cond) ((void)0)
+#endif
 
-#define GI(...) \
-  do{ /* LCOV_EXCL_START */ _Pragma("GCC diagnostic push"); _Pragma("GCC diagnostic ignored \"-Wsign-compare\""); \
-    IX_X(,##__VA_ARGS__,\
-        GI_3(__VA_ARGS__),\
-        GI_2(__VA_ARGS__),\
-        GI_1(__VA_ARGS__),\
-        GI_0(__VA_ARGS__)\
-        ); \
-    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */ }while(0)
+#define I(...)                                                                 \
+  do { /* LCOV_EXCL_START */                                                   \
+    _Pragma("GCC diagnostic push");                                            \
+    _Pragma("GCC diagnostic ignored \"-Wsign-compare\"");                      \
+    IX_X(, ##__VA_ARGS__, I_3(__VA_ARGS__), I_2(__VA_ARGS__),                  \
+         I_1(__VA_ARGS__), I_0(__VA_ARGS__));                                  \
+  #endif
+_Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */
+}
+while (0)
+
+#define GI(...)                                                                \
+  do { /* LCOV_EXCL_START */                                                   \
+    _Pragma("GCC diagnostic push");                                            \
+    _Pragma("GCC diagnostic ignored \"-Wsign-compare\"");                      \
+    IX_X(, ##__VA_ARGS__, GI_3(__VA_ARGS__), GI_2(__VA_ARGS__),                \
+         GI_1(__VA_ARGS__), GI_0(__VA_ARGS__));                                \
+    _Pragma("GCC diagnostic pop"); /* LCOV_EXCL_STOP */                        \
+  } while (0)
 
 #ifdef NDEBUG
 // Keep the (void) to avoid warnings when in release the variable is not used
@@ -60,10 +76,16 @@ void I_gdb_continuation();
     if (false) {                                                               \
       (void)(condition);                                                       \
     }                                                                          \
-    _Pragma("GCC diagnostic pop"); }while(0)
+    _Pragma("GCC diagnostic pop");                                             \
+  } while (0)
 #else
 
-#define I_2_shared(condition, message) \
-  do{ /* LCOV_EXCL_START */ if(!(condition)) { I_internal(__FILE__ , __LINE__ , #condition, message); I_gdb_continuation(); } /* LCOV_EXCL_STOP */ }while(0)
+#define I_2_shared(condition, message)                                         \
+  do {                                                                         \
+    I_ASSUME(condition); /* LCOV_EXCL_START */                                 \
+    if (!(condition)) {                                                        \
+      I_internal(__FILE__, __LINE__, #condition, message);                     \
+      I_gdb_continuation();                                                    \
+    } /* LCOV_EXCL_STOP */                                                     \
+  } while (0)
 #endif
-
