@@ -183,10 +183,11 @@ void I_setup() {
     return;
   called = true;
 
-  struct sigaction sigact;
+  struct sigaction sigact{};  // value-initialize: zero sa_mask and any padding
 
   sigact.sa_sigaction = crit_err_hdlr;
-  sigact.sa_flags = SA_RESTART | SA_SIGINFO;
+  sigact.sa_flags     = SA_RESTART | SA_SIGINFO;
+  sigemptyset(&sigact.sa_mask);  // canonical clear of the blocked-signal set
 
   if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
     fprintf(stderr, "error setting signal handler for %d (%s)\n",
