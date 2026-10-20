@@ -10,3 +10,11 @@ cc_library(
    visibility = ["//visibility:public"],
 )
 
+# iassert.hpp as a SOURCE file, for consumers that host-compile generated code
+# at run time (LiveHD's `lhd sim` driver locates it via its runfiles probe).
+filegroup(
+   name = "sim_runtime_hdrs",
+   srcs = ["src/iassert.hpp"],
+   visibility = ["//visibility:public"],
+)
+
